@@ -9,13 +9,13 @@ on:
   workflow_dispatch:
     inputs:
       scrape_type:
-        description: 'Type of scrape to run'
+        description: 'Choose scraping option'
         required: true
-        default: 'weekly'
+        default: 'first_page'
         type: choice
         options:
-          - weekly
-          - full
+          - first_page
+          - all_pages
 
 permissions:
   contents: write
@@ -40,14 +40,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests beautifulsoup4 lxml
       
-      - name: Run scraper (Weekly Update)
-        if: github.event.inputs.scrape_type == 'weekly' || github.event_name == 'schedule'
+      - name: Run scraper - First Page Only
+        if: github.event.inputs.scrape_type == 'first_page' || github.event_name == 'schedule'
         run: |
+          echo "🔍 Scraping FIRST PAGE only..."
           python scraper.py --mode weekly
       
-      - name: Run scraper (Full Scrape)
-        if: github.event.inputs.scrape_type == 'full'
+      - name: Run scraper - All 44 Pages
+        if: github.event.inputs.scrape_type == 'all_pages'
         run: |
+          echo "🔍 Scraping ALL 44 PAGES (this will take a while)..."
           python scraper.py --mode full
       
       - name: Check for changes
