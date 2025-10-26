@@ -17,6 +17,9 @@ on:
           - weekly
           - full
 
+permissions:
+  contents: write
+
 jobs:
   scrape:
     runs-on: ubuntu-latest
@@ -25,7 +28,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: true
       
       - name: Set up Python
         uses: actions/setup-python@v5
